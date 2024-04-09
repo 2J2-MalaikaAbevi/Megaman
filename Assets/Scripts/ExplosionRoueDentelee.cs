@@ -29,12 +29,12 @@ public class ExplosionRoueDentelee: MonoBehaviour
             GetComponent<Rigidbody2D>().gravityScale = 0;
 
             //Appeler la fonction pour la destruction de la roue dentelée après une demi seconde, soit la durée de son animation d'explosion
-            Invoke("DetruireEnnemi", 0.5f);
+            Invoke("DetruireRoueDentelee", 0.5f);
         }  
     }
 
     //Fonction pour la destruction de la roue dentelée
-    void DetruireEnnemi()
+    void DetruireRoueDentelee()
     {
         Destroy(gameObject);
     }

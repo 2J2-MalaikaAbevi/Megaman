@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -76,7 +77,7 @@ public class ControleMegaman : MonoBehaviour
                 vitesseY = GetComponent<Rigidbody2D>().velocity.y;
             }
 
-            //On fait accéléré Megaman tout en s'assurant qu'il ne dépasse pas la vitesse maximale imposé (pour ne pas qu'il soit de la zone de jeu)
+            //On fait accéléré Megaman tout en s'assurant qu'il ne dépasse pas la vitesse maximale imposé (pour ne pas qu'il sorte de la zone de jeu)
             if(!peutAttaquer && vitesseX <= vitesseMaximale && vitesseX >= -vitesseMaximale)
             {
                 //On multiplie car c'est plus facile a gérer que d'additionner/soustraire (vitesse négative et vitesse positive)
@@ -152,6 +153,7 @@ public class ControleMegaman : MonoBehaviour
                 //On active l'animation de l'explosion de l'abeille
                 infoCollision.gameObject.GetComponent<Animator>().SetBool("explosion", true);
 
+                //On désactive l'animation de déplacement de gauche à droite du parent (AbeilleDeplacement)
                 infoCollision.gameObject.transform.parent.GetComponent<Animator>().enabled = false;
 
                 //On désactive son collider

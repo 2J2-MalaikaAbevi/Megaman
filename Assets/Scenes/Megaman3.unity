@@ -7683,7 +7683,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 4
+  m_LinearDrag: 2
   m_AngularDrag: 0.05
   m_GravityScale: 4
   m_Material: {fileID: 0}
@@ -7781,7 +7781,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vitesseXMax: 10
   vitesseYMax: 22
-  vitesseMaximale: 25
+  vitesseMaximale: 18
   partieTerminee: 0
   sonMort: {fileID: 8300000, guid: bd56f20d539f58347a2d080d46364f89, type: 3}
 --- !u!95 &521134805
