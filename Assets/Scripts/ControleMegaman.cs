@@ -76,8 +76,8 @@ public class ControleMegaman : MonoBehaviour
                 vitesseY = GetComponent<Rigidbody2D>().velocity.y;
             }
 
-            //On fait accéléré Megaman tout en s'assurant qu'il ne depasse pas la vitesse maximale imposé (pour ne pas qu'il soit de la zone de jeu)
-            if(!peutAttaquer && vitesseX <= vitesseMaximale && vitesseX >= -vitesseMaximale) 
+            //On fait accéléré Megaman tout en s'assurant qu'il ne dépasse pas la vitesse maximale imposé (pour ne pas qu'il soit de la zone de jeu)
+            if(!peutAttaquer && vitesseX <= vitesseMaximale && vitesseX >= -vitesseMaximale)
             {
                 //On multiplie car c'est plus facile a gérer que d'additionner/soustraire (vitesse négative et vitesse positive)
                 vitesseX *= 2;
@@ -88,7 +88,7 @@ public class ControleMegaman : MonoBehaviour
 
 
 
-            /**************************************ANIMATIONS DE MARCHE ET D'ATTAQUE DE MÉGAMAN******************************************/
+            /*******ANIMATIONS DE MARCHE ET D'ATTAQUE DE MÉGAMAN******************************************/
             if(/*vitesseX > 0.9f || vitesseX < -0.9f*/ Mathf.Abs(vitesseX) > 0.9f)
             {
                 //On rend la condition pour l'animation de la marche vraie pour qu'elle joue
@@ -109,8 +109,6 @@ public class ControleMegaman : MonoBehaviour
                     peutAttaquer = false;
 
                     Invoke("ActivationAttaque", 0.5f);
-
-                    /*print(GetComponent<Animator>().GetBool("saute")); test*/
                 }
             }
         }   
