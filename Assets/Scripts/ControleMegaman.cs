@@ -58,8 +58,6 @@ public class ControleMegaman : MonoBehaviour
                 vitesseX = GetComponent<Rigidbody2D>().velocity.x;
             }
 
-            print(Physics2D.OverlapCircle(transform.position, 0.5f) == true);
-
             //On ajuste la variable vitesseY si la touche Up (ou W) est appuyée.
             if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && Physics2D.OverlapCircle(transform.position, 0.25f))
             {
@@ -140,7 +138,7 @@ public class ControleMegaman : MonoBehaviour
             partieTerminee = true;
 
             //On fait rejouer la partie avec un délai de 2 sec
-            Invoke("recommencerJeu", 2f);
+            Invoke("sceneMegamanMort", 2f);
             }
         }
 
@@ -179,9 +177,33 @@ public class ControleMegaman : MonoBehaviour
                 partieTerminee = true;
 
                 //On fait rejouer la partie avec un délai de 2 sec
-                Invoke("recommencerJeu", 2f);
+                Invoke("sceneMegamanMort", 2f);
             }
         }
+
+        if( infoCollision.gameObject.name == "Trophee")
+        {
+            sceneMegamanVictoire();
+        }
+    }
+
+    //
+    private void OnTriggerEnter2D(Collider2D infoCollision)
+    {
+        //On active l'animation de mort de Mégaman et on recommence la partie
+        GetComponent<Animator>().SetBool("mort", true);
+
+        //On fait jouer le son de la mort
+        GetComponent<AudioSource>().PlayOneShot(sonMort);
+
+        //On désactive le collider de la boite pour que Mégaman continue à tomber
+        /*infoCollision.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;*/
+
+        //On rend la variable de la partie terminée vraie
+        partieTerminee = true;
+
+        //On fait rejouer la partie avec un délai de 2 sec
+        Invoke("sceneMegamanMort", 2f);
     }
 
     //Fonction pour redonner la possibilité d'attaquer
@@ -193,9 +215,14 @@ public class ControleMegaman : MonoBehaviour
         GetComponent<Animator>().SetBool("attaque", false);
     }
 
-    void recommencerJeu()
+    void sceneMegamanMort()
     {
-        //Charger la scène 2 car il s'agit de Mégaman 3 (dans Build Setting)
-        SceneManager.LoadScene(2);
+        //Charger la scène 2 car il s'agit de la scène de la mort de Mégaman
+        SceneManager.LoadScene(5);
+    }
+
+    void sceneMegamanVictoire()
+    {
+        SceneManager.LoadScene(6);
     }
 }
