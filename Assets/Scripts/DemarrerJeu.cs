@@ -35,11 +35,11 @@ public class DemarrerJeu : MonoBehaviour
         }
 
         //Gestion du compte à rebour pour le texte de fin
-        if (megaman.GetComponent<ControleMegaman>().megamanMort)
-        {
+        /*if (ControleMegaman.m )
+        { */
             departTemps -= Time.deltaTime;
             textMort.text = "Ça recommence dans : " + departTemps.ToString();
-        }
+       /* }*/
 
     }
 
