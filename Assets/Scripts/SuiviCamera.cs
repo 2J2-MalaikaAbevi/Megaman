@@ -1,24 +1,30 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Fonctionnement et utilit√© g√©n√©rale du script:
+   Gestion des limites de la cam√©ra secondaire √† l'horizontale et √† la verticale
+   Par : Mala√Øka Abevi
+   Derni√®re modification : 21/04/2024
+*/
+
 public class SuiviCamera : MonoBehaviour
 {
-    //D…CLARATION DES VARIABLES
-    public GameObject laCible; //Variable pour enregistrer le gameObject qui sera suivi (dans ce cas, c'est MÈgaman)
+    //D√âCLARATION DES VARIABLES
+    public GameObject laCible; //Variable pour enregistrer le gameObject qui sera suivi (dans ce cas, c'est M√©gaman)
 
-    public float limiteHaut; //Variable pour la limite du haut de la camÈra
-    public float limiteBas; //Variable pour la limite du bas de la camÈra
-    public float limiteGauche; //Variable pour la limite de la gauche de la camÈra
-    public float limiteDroite; //Variable pour la limite de la droite de la camÈra
+    public float limiteHaut; //Variable pour la limite du haut de la cam√©ra
+    public float limiteBas; //Variable pour la limite du bas de la cam√©ra
+    public float limiteGauche; //Variable pour la limite de la gauche de la cam√©ra
+    public float limiteDroite; //Variable pour la limite de la droite de la cam√©ra
 
     // Update is called once per frame
     void Update()
     {
-        //DÈclaration locale d'une variable vecteur ‡ 3 chiffres pour la position de la camÈra
+        //D√©claration locale d'une variable vecteur √† 3 chiffres pour la position de la cam√©ra
         Vector3 positionActuelle = laCible.transform.position;
 
-        //DÈfinir la position de la camÈra selon les limites imposÈes (pour ne pas sortir du champ de vue dÈsirÈ)
+        //D√©finir la position de la cam√©ra selon les limites impos√©es (pour ne pas sortir du champ de vue d√©sir√©)
         if (positionActuelle.x < limiteGauche) positionActuelle.x = limiteGauche; //limite de la gauche
 
         if (positionActuelle.x > limiteDroite) positionActuelle.x = limiteDroite; //limite de la droite
@@ -27,10 +33,10 @@ public class SuiviCamera : MonoBehaviour
 
         if (positionActuelle.y > limiteHaut) positionActuelle.y = limiteHaut; //limite du haut
 
-        //On s'assure que la camÈra demeure ‡ la mÍme ""profondeur"" (sinon, elle peut Ítre remise ‡ 0 et on ne verra plus la scËne)
+        //On s'assure que la cam√©ra demeure √† la m√™me ""profondeur"" (sinon, elle peut √™tre remise √† 0 et on ne verra plus la sc√®ne)
         positionActuelle.z = -10;
 
-        //Puis on applique ‡ la position de la camÈra la position actuelle
+        //Puis on applique √† la position de la cam√©ra la position actuelle
         transform.position = positionActuelle;
     }
 }

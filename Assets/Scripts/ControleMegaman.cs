@@ -24,7 +24,10 @@ public class ControleMegaman : MonoBehaviour
     public float vitesseMaximale;  //La vitesse maximale que Mégaman peut atteindre
 
     public bool partieTerminee = false; //Variable pour déterminer si la partie est terminée ou non
-       
+
+    static bool megamanMort = false; //Variable statique pour enregistrer si Mégaman est mort ou non
+    static bool megamanVictoire = false; //Variable statique pour enregister si Mégaman a gagné ou non
+                                         
     bool peutAttaquer = true; //Variable pour déterminer si Mégaman peut attaquer ou non en vérifiant s'il y a une attaque en cours
 
     public AudioClip sonMort; //Variable pour le clip du son de la mort de Mégaman

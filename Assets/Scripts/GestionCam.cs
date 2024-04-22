@@ -1,6 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine;  
+
+/* Fonctionnement et utilité générale du script:
+   Gestion de la caméra utilisé par la detection de touche
+   Par : Malaïka Abevi
+   Dernière modification : 21/04/2024
+*/
 
 public class GestionCam : MonoBehaviour
 {
