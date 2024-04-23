@@ -17,21 +17,20 @@ public class ControleMegaman : MonoBehaviour
 {
     /******DÉCLARATIONS DES VARIABLES******/
     float vitesseX; //Variable pour la vitesse horizontale de Megaman
-    public float vitesseXMax; //Variable pour la vitesse de déplacement désirée pour Megaman (modifiable dans l'inspecteur)
     float vitesseY; //Variable pour la vitesse verticale de Megaman
+
+    public float vitesseXMax; //Variable pour la vitesse de déplacement désirée pour Megaman (modifiable dans l'inspecteur)
     public float vitesseYMax; //Variable pour la vitesse de saut désirée pour Megaman (modifiable dans l'inspecteur)
 
     public float vitesseMaximale;  //La vitesse maximale que Mégaman peut atteindre
 
     public bool partieTerminee = false; //Variable pour déterminer si la partie est terminée ou non
 
-    static bool megamanMort = false; //Variable statique pour enregistrer si Mégaman est mort ou non
-    static bool megamanVictoire = false; //Variable statique pour enregister si Mégaman a gagné ou non
-                                         
     bool peutAttaquer = true; //Variable pour déterminer si Mégaman peut attaquer ou non en vérifiant s'il y a une attaque en cours
 
     public AudioClip sonMort; //Variable pour le clip du son de la mort de Mégaman
 
+    static float pointage; //Variable non purgée par la mémoire pour enregistrer le score du joueur, c'est-à-dire le nombre de balle d'énergie qu'il amasse
 
     //Fonction qui gère les déplacements et le saut de Megaman et qui gère les animations de Megaman
     void Update()
@@ -116,7 +115,7 @@ public class ControleMegaman : MonoBehaviour
         }   
     }
 
-    /*Fonction pour la détection des collisions*/
+    //Fonction pour la détection des collisions
     void OnCollisionEnter2D(Collision2D infoCollision)
     {
         //On ajoute une condition avec Physics2D pour que le personnage arrète son saut seulement lorsqu'il touche un objet "avec ses pieds" 
@@ -183,30 +182,41 @@ public class ControleMegaman : MonoBehaviour
                 Invoke("sceneMegamanMort", 2f);
             }
         }
-
-        if( infoCollision.gameObject.name == "Trophee")
-        {
-            sceneMegamanVictoire();
-        }
     }
 
-    //
-    private void OnTriggerEnter2D(Collider2D infoCollision)
+    //Fonction pour la gestion des collisions avec les colliders de type Trigger
+    private void OnTriggerEnter2D(Collider2D infoCollider)
     {
-        //On active l'animation de mort de Mégaman et on recommence la partie
-        GetComponent<Animator>().SetBool("mort", true);
+        //Si Mégaman touche à des balles d'énergie, le pointage est incrémenté
+        if(infoCollider.gameObject.tag == "Point petit")
+        {
+            //On détruit les balles touchées
+            Destroy(infoCollider.gameObject);
+            //On incrémente le pointage
+            pointage++;
+        }
 
-        //On fait jouer le son de la mort
-        GetComponent<AudioSource>().PlayOneShot(sonMort);
+        if(infoCollider.gameObject.name == "LeVideMort")
+        {
+            //On active l'animation de mort de Mégaman et on recommence la partie
+            GetComponent<Animator>().SetBool("mort", true);
 
-        //On désactive le collider de la boite pour que Mégaman continue à tomber
-        /*infoCollision.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;*/
+            //On fait jouer le son de la mort
+            GetComponent<AudioSource>().PlayOneShot(sonMort);
 
-        //On rend la variable de la partie terminée vraie
-        partieTerminee = true;
+            //On rend la variable de la partie terminée vraie
+            partieTerminee = true;
 
-        //On fait rejouer la partie avec un délai de 2 sec
-        Invoke("sceneMegamanMort", 2f);
+            //On appelle la fonction qui s'occupe du chargement de la scène de mort
+            Invoke("sceneMegamanMort", 2f);
+        }
+
+        //Si Mégaman touche au trophée, c'est la victoire
+        if (infoCollider.gameObject.name == "Trophee")
+        {
+            //On appelle la fonction qui s'occupe du chargement de la scène de victoire
+            sceneMegamanVictoire();
+        }
     }
 
     //Fonction pour redonner la possibilité d'attaquer
@@ -218,12 +228,13 @@ public class ControleMegaman : MonoBehaviour
         GetComponent<Animator>().SetBool("attaque", false);
     }
 
+    //Fonction pour charger la scène de la mort de Mégaman
     void sceneMegamanMort()
     {
-        //Charger la scène 2 car il s'agit de la scène de la mort de Mégaman
         SceneManager.LoadScene(5);
     }
 
+    //Fonction pour charger la scène de la victoire de Mégaman
     void sceneMegamanVictoire()
     {
         SceneManager.LoadScene(6);

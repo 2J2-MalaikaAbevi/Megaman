@@ -24,7 +24,7 @@ EditorBuildSettings:
     path: Assets/Scenes/FinaleMort.unity
     guid: 7b337e6eb01e1184ba95add32234ab5d
   - enabled: 1
-    path: Assets/Scenes/FinaleGagne.unity
+    path: Assets/Scenes/FinaleVictoire.unity
     guid: a5005dddb34175943b17fcfe2ea40387
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
