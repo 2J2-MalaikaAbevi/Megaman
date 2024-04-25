@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,7 +31,11 @@ public class ControleMegaman : MonoBehaviour
 
     public AudioClip sonMort; //Variable pour le clip du son de la mort de Mégaman
 
-    static float pointage; //Variable non purgée par la mémoire pour enregistrer le score du joueur, c'est-à-dire le nombre de balle d'énergie qu'il amasse
+    public static int pointage; //Variable non purgée par la mémoire pour enregistrer le score du joueur, c'est-à-dire le nombre de balle d'énergie qu'il amasse
+
+    public static int meilleurPointage; //
+
+    public TextMeshProUGUI textePointage; //
 
     //Fonction qui gère les déplacements et le saut de Megaman et qui gère les animations de Megaman
     void Update()
@@ -112,7 +117,9 @@ public class ControleMegaman : MonoBehaviour
                     Invoke("ActivationAttaque", 0.5f);
                 }
             }
-        }   
+        }
+
+        GestionPointageMeilleur();
     }
 
     //Fonction pour la détection des collisions
@@ -192,8 +199,12 @@ public class ControleMegaman : MonoBehaviour
         {
             //On détruit les balles touchées
             Destroy(infoCollider.gameObject);
+            
             //On incrémente le pointage
             pointage++;
+            
+            //On transcrit la valeur du pointage dans le texte pour le pointage
+            textePointage.text = pointage.ToString();
         }
 
         if(infoCollider.gameObject.name == "LeVideMort")
@@ -226,6 +237,20 @@ public class ControleMegaman : MonoBehaviour
         peutAttaquer = true;
         //Puis on remet la condition pour l'animation d'attaque à false
         GetComponent<Animator>().SetBool("attaque", false);
+    }
+
+    void GestionPointageMeilleur()
+    {
+        //--------------------------------
+        if (pointage > meilleurPointage)
+        {
+            meilleurPointage = pointage;
+        }
+
+        if (SceneManager.GetActiveScene().name == "Megaman4")
+        {
+            pointage = 0;
+        }
     }
 
     //Fonction pour charger la scène de la mort de Mégaman
