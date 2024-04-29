@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - plateforme
+  - detail
+  - Point petit
+  - roueDentelee
   layers:
   - Default
   - TransparentFX

@@ -29,7 +29,6 @@ public class GestionCam : MonoBehaviour
         {
             //Comme la fonction Start() rend déja la première caméra active et la deuxième inactive, on l'a rappelle tout simplement (au lieu de réecrire le code) 
             Start();
-            print("ca marche");
         }
         //Si on appuie sur "2", on rend la première inactive et la deuxième caméra active 
         else if (Input.GetKeyDown(KeyCode.Alpha2))

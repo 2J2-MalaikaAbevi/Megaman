@@ -44,7 +44,7 @@ public class GererScene : MonoBehaviour
             //Si la barre d'espace est appuyée, une fonction pour démarrer le jeu est appelée 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(4);
+                SceneManager.LoadScene(7);
             }
         }
 
@@ -62,7 +62,7 @@ public class GererScene : MonoBehaviour
 
         if (compteRebours <= 0)
         {
-            SceneManager.LoadScene(4);
+            SceneManager.LoadScene(7);
         }
 
         texteMort.text = "Ça recommence dans : " + compteRebours.ToString();

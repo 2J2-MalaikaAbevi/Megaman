@@ -16,7 +16,7 @@ using UnityEngine.SceneManagement;
 
 public class ControleMegaman : MonoBehaviour
 {
-    /******DÉCLARATIONS DES VARIABLES******/
+    /******DÉCLARATIONS DES VARIABLES******/                               
     float vitesseX; //Variable pour la vitesse horizontale de Megaman
     float vitesseY; //Variable pour la vitesse verticale de Megaman
 
@@ -29,13 +29,14 @@ public class ControleMegaman : MonoBehaviour
 
     bool peutAttaquer = true; //Variable pour déterminer si Mégaman peut attaquer ou non en vérifiant s'il y a une attaque en cours
 
-    public AudioClip sonMort; //Variable pour le clip du son de la mort de Mégaman
-
     public static int pointage; //Variable non purgée par la mémoire pour enregistrer le score du joueur, c'est-à-dire le nombre de balle d'énergie qu'il amasse
-
     public static int meilleurPointage; //
 
-    public TextMeshProUGUI textePointage; //
+    public TextMeshProUGUI textePointage; //Variable pour le texte du pointage
+
+    public GameObject BalleOriginale; //Variable pour la balle de Mégaman
+
+    public AudioClip sonMort; //Variable pour le clip du son de la mort de Mégaman
 
     //Fonction qui gère les déplacements et le saut de Megaman et qui gère les animations de Megaman
     void Update()
@@ -117,6 +118,19 @@ public class ControleMegaman : MonoBehaviour
                     Invoke("ActivationAttaque", 0.5f);
                 }
             }
+
+            //Gestion de l'attaque avec la balle de Mégaman
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (!(GetComponent<Animator>().GetBool("attaque")) && !(GetComponent<Animator>().GetBool("saute")))
+                {
+                    GetComponent<Animator>().SetBool("tireBalle", true);
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Return))
+            {
+                GetComponent<Animator>().SetBool("tireBalle", false);
+            }
         }
 
         GestionPointageMeilleur();
@@ -132,7 +146,7 @@ public class ControleMegaman : MonoBehaviour
         }
 
         /*Si on touche la roue dentelée*/
-        if(infoCollision.gameObject.name == "RoueDentelee")
+        if(infoCollision.gameObject.tag == "roueDentelee")
         {
             //On fait mourir Mégaman seulement s'il n'est pas en attaque
             if (!(GetComponent<Animator>().GetBool("attaque")))
