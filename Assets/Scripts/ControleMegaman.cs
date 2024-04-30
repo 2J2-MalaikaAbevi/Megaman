@@ -9,9 +9,10 @@ using UnityEngine.SceneManagement;
    Gestion des déplacements horizontaux et du saut de Megaman à l'aide des touches : Left (ou A), Right (ou D) et Up (ou W).
    Gestion des détections des collisions entre le personnage et les objets du jeu.
    Gestion des animations
+   Gestion des attaques de Mégaman (attaque classique et tire)
    Gestion des fins de partie
    Par : Malaïka Abevi
-   Dernière modification : 09/04/2024
+   Dernière modification : 30/04/2024
 */
 
 public class ControleMegaman : MonoBehaviour
@@ -29,18 +30,21 @@ public class ControleMegaman : MonoBehaviour
 
     bool peutAttaquer = true; //Variable pour déterminer si Mégaman peut attaquer ou non en vérifiant s'il y a une attaque en cours
 
-    public static int pointage; //Variable non purgée par la mémoire pour enregistrer le score du joueur, c'est-à-dire le nombre de balle d'énergie qu'il amasse
-    public static int meilleurPointage; //
+    public static int pointage; //Variable non purgée par la mémoire pour enregistrer le pointage du joueur, c'est-à-dire le nombre de balle d'énergie qu'il amasse
+    public static int meilleurPointage; //Variable non purgée par la mémoire pour enregistrer le meilleur pointage du joueur
+    public static bool tropheePoint; //Variable non purgée pour enregistrer si le pointage obtenu par le joueur à bien eu un meilleur pointage à la fin de la partie
 
     public TextMeshProUGUI textePointage; //Variable pour le texte du pointage
 
     public GameObject BalleOriginale; //Variable pour la balle de Mégaman
 
     public AudioClip sonMort; //Variable pour le clip du son de la mort de Mégaman
+    public AudioClip sonsArme; //Variable pour le clip de son de tire de Mégaman
 
-    //Fonction qui gère les déplacements et le saut de Megaman et qui gère les animations de Megaman
+    //Fonction Update qui gère les déplacements et le saut de Megaman et qui gère les animations de Megaman
     void Update()
     {
+        //----------------Gestion du déplacement---------------//
         if (!partieTerminee) //Les touches ne marcheront que si la partie n'est pas terminée
         {
             //On ajuste la variable vitesseX si la touche Left (ou A) ou Right (ou D) est appuyée.
@@ -95,8 +99,10 @@ public class ControleMegaman : MonoBehaviour
 
 
 
-            /*******ANIMATIONS DE MARCHE ET D'ATTAQUE DE MÉGAMAN******************************************/
-            if(/*vitesseX > 0.9f || vitesseX < -0.9f*/ Mathf.Abs(vitesseX) > 0.9f)
+            /*******GESTION DES ANIMATIONS DE MARCHE ET D'ATTAQUES DE MÉGAMAN******************************************/
+
+            //-------------------------------------------------Gestion de l'animation de marche de Mégaman
+            if(Mathf.Abs(vitesseX) > 0.9f)
             {
                 //On rend la condition pour l'animation de la marche vraie pour qu'elle joue
                 GetComponent<Animator>().SetBool("marche", true);
@@ -107,33 +113,67 @@ public class ControleMegaman : MonoBehaviour
                 GetComponent<Animator>().SetBool("marche", false);
             }
 
-            /****************Gestion de l'attaque****************/
+
+            //--------------------------------------------------Gestion de l'attaque classique
+            //Si la barre d'espace est appuyé
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                //Et seulement si Mégaman peut attaquer et qu'il n'est pas entrain de sauter
                 if(peutAttaquer && !(GetComponent<Animator>().GetBool("saute")))
                 {
+                    //On active l'animation d'attaque en rendant le parametre d'attaque vrai
                     GetComponent<Animator>().SetBool("attaque", true);
+                    //Et on enregistre que Mégaman ne peut pas attaquer
                     peutAttaquer = false;
 
+                    //Puis on appelle une fonction qui rend la possibilité d'attaque après un délai de 0,5f 
                     Invoke("ActivationAttaque", 0.5f);
                 }
             }
 
-            //Gestion de l'attaque avec la balle de Mégaman
+
+            //-----------------------------------------------Gestion de l'attaque avec la balle de Mégaman
+            //Si on appuie sur la touche Entrée
             if (Input.GetKeyDown(KeyCode.Return))
-            {
+            {   
+                //Seulement si l'attaque et le saut ne sont pas en cours
                 if (!(GetComponent<Animator>().GetBool("attaque")) && !(GetComponent<Animator>().GetBool("saute")))
                 {
+                    //Rendre la variable qui permettra les animations de tire de Mégaman à true
                     GetComponent<Animator>().SetBool("tireBalle", true);
+                    //Cloner la balle et enregistrer les clones de la balle
+                    GameObject balleClone = Instantiate(BalleOriginale);
+                    //Rendre les clones actives
+                    balleClone.SetActive(true);
+                    //Faire jouer le son de tire
+                    GetComponent<AudioSource>().PlayOneShot(sonsArme);
+                    
+                    //Gestion de la direction des balles selon la direction de Mégaman
+                    //Si Mégaman est vers la gauche
+                    if(GetComponent<SpriteRenderer>().flipX)
+                    {
+                        //On met les balles du coté gauche de Mégaman
+                        balleClone.transform.position = transform.position + new Vector3(-1f, 1);
+                        //On propulse les balles vers la gauche en changeant leur vélocités
+                        balleClone.GetComponent<Rigidbody2D>().velocity = new Vector2(-25, 0);
+                    }
+                    //Si Mégaman est vers la droite
+                    else
+                    {
+                        //On met les balles du coté droit de Mégaman
+                        balleClone.transform.position = transform.position + new Vector3(1f, 1);
+                        //On propulse les balles vers la droite en changeant leur vélocités
+                        balleClone.GetComponent<Rigidbody2D>().velocity = new Vector2(25, 0);
+                    }
                 }
             }
+            //Si la touche Entrée est relachée
             else if (Input.GetKeyUp(KeyCode.Return))
             {
+                //On rend fausse le paramètre pour le tire de balle
                 GetComponent<Animator>().SetBool("tireBalle", false);
             }
         }
-
-        GestionPointageMeilleur();
     }
 
     //Fonction pour la détection des collisions
@@ -145,63 +185,30 @@ public class ControleMegaman : MonoBehaviour
             GetComponent<Animator>().SetBool("saute", false);
         }
 
-        /*Si on touche la roue dentelée*/
-        if(infoCollision.gameObject.tag == "roueDentelee")
+        //Si on touche un ennemi 
+        if(infoCollision.gameObject.tag == "ennemi")
         {
             //On fait mourir Mégaman seulement s'il n'est pas en attaque
             if (!(GetComponent<Animator>().GetBool("attaque")))
             {
-            //On rend la condition pour l'animation de la mort vraie pour qu'elle joue
-            GetComponent<Animator>().SetBool("mort", true);
-
-            //On fait jouer le son de la mort
-            GetComponent<AudioSource>().PlayOneShot(sonMort);
-
-            //On rend la variable de la partie terminée vraie
-            partieTerminee = true;
-
-            //On fait rejouer la partie avec un délai de 2 sec
-            Invoke("sceneMegamanMort", 2f);
-            }
-        }
-
-        /*Si on touche l'abeille*/
-        if(infoCollision.gameObject.name == "Abeille")
-        {
-            //Si l'animation d'attaque de Megaman est active
-            if (GetComponent<Animator>().GetBool("attaque"))
-            {
-                //On active l'animation de l'explosion de l'abeille
-                infoCollision.gameObject.GetComponent<Animator>().SetBool("explosion", true);
-
-                //On désactive l'animation de déplacement de gauche à droite du parent (AbeilleDeplacement)
-                infoCollision.gameObject.transform.parent.GetComponent<Animator>().enabled = false;
-
-                //On désactive son collider
-                infoCollision.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
-
-                //Puis on détruit l'abeille avec un délai de 1sec pour avoir de le temps de voir l'animation de l'explosion de l'abeille
-                Destroy(infoCollision.gameObject, 1f);
-            }
-
-            //Si l'animation d'attaque de Megaman n'est pas active
-            else if(!(GetComponent<Animator>().GetBool("attaque")))
-            {
-                //On active l'animation de mort de Mégaman et on recommence la partie
+                //On rend la condition pour l'animation de la mort vraie pour qu'elle joue
                 GetComponent<Animator>().SetBool("mort", true);
 
                 //On fait jouer le son de la mort
                 GetComponent<AudioSource>().PlayOneShot(sonMort);
 
-                //On désactive le collider de l'abeille
-                infoCollision.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
-
                 //On rend la variable de la partie terminée vraie
                 partieTerminee = true;
 
-                //On fait rejouer la partie avec un délai de 2 sec
+                //On fait rejouer la partie après un délai de 2 sec
                 Invoke("sceneMegamanMort", 2f);
             }
+        }
+
+        //Pour désactiver le capsule collider de l'abeille lors d'une collision pour éviter que l'abeille pousse Mégaman
+        if(infoCollision.gameObject.name == "Abeille")
+        {
+            infoCollision.gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
         }
     }
 
@@ -241,6 +248,21 @@ public class ControleMegaman : MonoBehaviour
         {
             //On appelle la fonction qui s'occupe du chargement de la scène de victoire
             sceneMegamanVictoire();
+
+            //Si Mégaman touche le trophée, alors on compare le pointage obtenu avec avec le meilleur pointage réalisé
+            if (pointage > meilleurPointage)
+            {
+                //Si le pointage actuel est plus élevé que le meilleur pointage obtenu, alors on donne nouvelle valeur au meilleur pointage
+                meilleurPointage = pointage;
+
+                //On rend la variable booléenne statique true (utile dans un autre script dans la scène de victoire)
+                tropheePoint = true;
+            }
+            else
+            {
+                //On rend la variable booléenne statique false (utile dans un autre script dans la scène de victoire)
+                tropheePoint = false;
+            }
         }
     }
 
@@ -253,29 +275,15 @@ public class ControleMegaman : MonoBehaviour
         GetComponent<Animator>().SetBool("attaque", false);
     }
 
-    void GestionPointageMeilleur()
-    {
-        //--------------------------------
-        if (pointage > meilleurPointage)
-        {
-            meilleurPointage = pointage;
-        }
-
-        if (SceneManager.GetActiveScene().name == "Megaman4")
-        {
-            pointage = 0;
-        }
-    }
-
     //Fonction pour charger la scène de la mort de Mégaman
     void sceneMegamanMort()
     {
-        SceneManager.LoadScene(5);
+        SceneManager.LoadScene("FinaleMort");
     }
 
     //Fonction pour charger la scène de la victoire de Mégaman
     void sceneMegamanVictoire()
     {
-        SceneManager.LoadScene(6);
+        SceneManager.LoadScene("FinaleVictoire");
     }
 }

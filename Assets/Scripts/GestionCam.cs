@@ -10,11 +10,11 @@ using UnityEngine;
 
 public class GestionCam : MonoBehaviour
 {
-    //DÉCLARATION DES VARIABLESS
+    //DÉCLARATION DES VARIABLES
     public GameObject camera1; //Variable pour enregister une première caméra à contrôler
     public GameObject camera2; //Variable pour enregister une deuxième caméra à contrôler
 
-    // Start is called before the first frame update
+    //On démarre le jeu avec la caméra 1 active et la camera 2 désactivée
     void Start()
     {
         camera1.SetActive(true);
@@ -35,7 +35,6 @@ public class GestionCam : MonoBehaviour
         {
             camera1.SetActive(false);
             camera2.SetActive(true);
-            print("ca marche");
         }
     }
 }

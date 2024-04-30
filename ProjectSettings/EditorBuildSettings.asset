@@ -21,13 +21,13 @@ EditorBuildSettings:
     path: Assets/Scenes/Megaman4.unity
     guid: 225e8db2337bc4a48b91f1e6508904cf
   - enabled: 1
+    path: Assets/Scenes/Megaman5.unity
+    guid: c72f3730eb6701c42bab072c2017f1a7
+  - enabled: 1
     path: Assets/Scenes/FinaleMort.unity
     guid: 7b337e6eb01e1184ba95add32234ab5d
   - enabled: 1
     path: Assets/Scenes/FinaleVictoire.unity
     guid: a5005dddb34175943b17fcfe2ea40387
-  - enabled: 1
-    path: Assets/Scenes/Megaman5.unity
-    guid: c72f3730eb6701c42bab072c2017f1a7
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

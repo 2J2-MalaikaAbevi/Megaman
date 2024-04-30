@@ -18,7 +18,7 @@ public class SuiviCamera : MonoBehaviour
     public float limiteGauche; //Variable pour la limite de la gauche de la caméra
     public float limiteDroite; //Variable pour la limite de la droite de la caméra
 
-    // Update is called once per frame
+    //Fonction pour la gestion des limite de la caméra 
     void Update()
     {
         //Déclaration locale d'une variable vecteur à 3 chiffres pour la position de la caméra
